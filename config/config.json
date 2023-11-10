@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "m3kmj1548",
-    "database": "database_development",
+    "database": "shop-project",
     "host": "database-sequelize.cxgernqmgd9o.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql"
   },
