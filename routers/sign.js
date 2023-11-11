@@ -15,6 +15,10 @@ router.post("/sign", async (req, res) => {
       return res.status(400).send("이미 가입된 이메일입니다.");
     }
 
+    if (Object.keys(req.body).length !== 4) {
+      return res.json({ errorMessage: "정확히 입력하세요." });
+    }
+
     if (password.length < 7 || password !== check_password) {
       console.log("haha");
       return res

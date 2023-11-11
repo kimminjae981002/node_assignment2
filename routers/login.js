@@ -2,13 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const { Signs } = require("../models");
-const cookieParser = require("cookie-parser");
-const app = express();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const SECRET_KEY = process.env.jwt_secret_key;
-
-app.use(cookieParser());
 
 router.post("/login", async (req, res) => {
   try {
@@ -17,6 +13,14 @@ router.post("/login", async (req, res) => {
     const user = await Signs.findOne({
       where: { email: email },
     });
+
+    const users = await Signs.findAll();
+    const a = users.filter((user) => {
+      return user.email === email;
+    });
+    if (!a.length) {
+      return res.status(400).send("회원이 아닙니다.");
+    }
 
     const id = user.dataValues.userId;
 
@@ -39,14 +43,12 @@ router.post("/login", async (req, res) => {
       return res.status(400).send("비밀번호를 잘못 입력하셨습니다.");
     }
 
-    if (user.length === 0) {
-      return res.status(400).send("회원이 아닙니다.");
-    }
     if (isPasswordValid) {
       res.status(201).send("로그인 완료");
     }
   } catch (error) {
     console.log(error);
+    return res.status(400).json({ message: "뭄마" });
   }
 });
 
