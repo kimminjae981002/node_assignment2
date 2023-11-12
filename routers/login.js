@@ -66,10 +66,11 @@ router.get("/me", authMiddleWare, async (req, res) => {
   const token = req.cookies.accessToken;
 
   if (token) {
-    const { email, name } = res.locals.user;
+    console.log(res.locals.user);
+    const { email, nickname } = res.locals.user;
     // 사용자 정보를 반환
     res.status(200).json({
-      user: { email, name },
+      user: { email, nickname },
     });
   }
 });
