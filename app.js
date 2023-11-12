@@ -40,8 +40,8 @@ app.use("/api", express.urlencoded({ extended: false }), loginRouter);
 const authMiddleWare = require("./middlewares/login.js");
 
 // product 라우터 연결
-app.use("/api", authMiddleWare, productRouter);
-
+app.use("/api", authMiddeWare, productRouter);
+l;
 // 내 정보 보기
 // app.use("/api/auth/me", authMiddleWare, async (req, res) => {
 //   const email = res.locals.user.email;
