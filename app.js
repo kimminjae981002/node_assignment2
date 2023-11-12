@@ -46,16 +46,21 @@ const authMiddleWare = require("./middlewares/login.js");
 app.use("/api", authMiddleWare, productRouter);
 
 // 내 정보 보기
-app.use("/api/auth/me", authMiddleWare, async (req, res) => {
-  const email = res.locals.user.email;
-  const nickname = res.locals.user.nickname;
-  res.json({
-    user: {
-      email,
-      nickname,
-    },
-  });
-});
+// app.use("/api/auth/me", authMiddleWare, async (req, res) => {
+//   const email = res.locals.user.email;
+//   const nickname = res.locals.user.nickname;
+//   res.json({
+//     user: {
+//       email,
+//       nickname,
+//     },
+//   });
+// });
+
+app.use("/api", express.urlencoded({ extended: false }), [
+  signRouter,
+  loginRouter,
+]);
 
 // 서버 연결
 app.listen(8080, () => {

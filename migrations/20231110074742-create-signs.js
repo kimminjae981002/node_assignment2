@@ -44,7 +44,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Signs", {
-      userId: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -53,16 +53,15 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          isEmail: true,
+        },
       },
       nickname: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       password: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-      },
-      check_password: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },

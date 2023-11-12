@@ -45,36 +45,50 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.Signs.hasMany(models.Products, { foreignKey: "userId" });
     }
   }
   Signs.init(
     {
-      userId: {
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
       email: {
         type: DataTypes.STRING,
-        allowNull: true,
+        validate: {
+          isEmail: true,
+        },
       },
-      nickname: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      check_password: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+      nickname: DataTypes.STRING,
+      password: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "Signs",
     }
+    // {
+    //   userId: {
+    //     primaryKey: true,
+    //     type: DataTypes.INTEGER,
+    //   },
+    //   email: {
+    //     type: DataTypes.STRING,
+    //     allowNull: true,
+    //   },
+    //   nickname: {
+    //     type: DataTypes.STRING,
+    //     allowNull: true,
+    //   },
+    //   password: {
+    //     type: DataTypes.STRING,
+    //     allowNull: true,
+    //   },
+    //   check_password: {
+    //     type: DataTypes.STRING,
+    //     allowNull: true,
+    //   },
+    // },
+    // {
+    //   sequelize,
+    //   modelName: "Signs",
+    // }
   );
   return Signs;
 };
