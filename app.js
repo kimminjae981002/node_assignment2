@@ -35,10 +35,7 @@ app.get("/", (req, res) => {
 });
 
 // 라우터 연결
-app.use("/api", express.urlencoded({ extended: false }), [
-  signRouter,
-  loginRouter,
-]);
+app.use("/api", express.urlencoded({ extended: false }), loginRouter);
 
 const authMiddleWare = require("./middlewares/login.js");
 

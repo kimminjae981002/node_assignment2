@@ -17,11 +17,12 @@ module.exports = async (req, res, next) => {
   }
 
   try {
-    //복호화 및 검증 // secert키가 다르면 오류
     const userId = jwt.verify(token, SECRET_KEY);
-    await Signs.findOne(userId);
-    res.locals.user = user;
-    next();
+    Signs.findOne(userId).then((user) => {
+      console.log(user.id);
+      res.locals.user = user;
+      next();
+    });
   } catch (error) {
     console.log(error);
     res.status(400).json({
