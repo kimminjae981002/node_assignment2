@@ -31,19 +31,19 @@ module.exports = {
         comment: "test1",
         createdAt: new Date(),
         updatedAt: new Date(),
-        productId: userId,
+        userId: userId,
       },
       {
         comment: "test2",
         createdAt: new Date(),
         updatedAt: new Date(),
-        productId: userId,
+        userId: userId,
       },
       {
         comment: "test3",
         createdAt: new Date(),
         updatedAt: new Date(),
-        productId: userId,
+        userId: userId,
       },
     ]);
   },

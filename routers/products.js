@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { Products } = require("../models");
 
-router.post("/product", async (req, res) => {
+const authMiddleWare = require("../middlewares/login");
+
+router.post("/product", authMiddleWare, async (req, res) => {
   try {
     const { title, content, status } = req.body;
 
@@ -42,7 +44,7 @@ router.post("/product", async (req, res) => {
 
 // });
 
-router.patch("/product/:productId", async (req, res) => {
+router.patch("/product/:productId", authMiddleWare, async (req, res) => {
   const { productId } = req.params;
   const { content, status, title } = req.body;
 
@@ -57,39 +59,51 @@ router.patch("/product/:productId", async (req, res) => {
         message: "상품을 찾을 수 없습니다.",
       });
     }
+    if (res.locals.user.id === product[0].dataValues.id) {
+      await Products.update(
+        { title, content, status },
+        { where: { id: productId } }
+      );
 
-    await Products.update(
-      { title, content, status },
-      { where: { id: productId } }
-    );
-
-    return res.status(201).json({
-      message: "상품 수정 완료",
+      return res.status(201).json({
+        message: "상품 수정 완료",
+      });
+    }
+    res.status(400).json({
+      message: "관리자가 아닙니다.",
     });
   } catch (error) {
     return res.json(error);
   }
 });
 
-router.delete("/product/:productId", async (req, res) => {
+router.delete("/product/:productId", authMiddleWare, async (req, res) => {
   const { productId } = req.params;
 
   const products = await Products.findAll({});
   const product = products.filter((p) => {
     return p.id.toString() === productId;
   });
+  try {
+    if (!product.length) {
+      return res.status(400).json({
+        message: "상품을 찾을 수가 없습니다.",
+      });
+    }
+    if (res.locals.user.id === product[0].dataValues.id) {
+      await Products.destroy({ where: { id: productId } });
 
-  if (!product.length) {
-    return res.status(400).json({
-      message: "상품을 찾을 수가 없습니다.",
+      return res.status(201).json({
+        message: "상품 삭제 완료",
+      });
+    }
+
+    res.status(400).json({
+      message: "관리자가 아닙니다.",
     });
+  } catch (error) {
+    return res.json(error);
   }
-
-  await Products.destroy({ where: { id: productId } });
-
-  return res.status(201).json({
-    message: "상품 삭제 완료",
-  });
 });
 
 module.exports = router;

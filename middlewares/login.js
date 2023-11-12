@@ -17,12 +17,22 @@ module.exports = async (req, res, next) => {
   }
 
   try {
-    const userId = jwt.verify(token, SECRET_KEY);
-    Signs.findOne(userId).then((user) => {
-      console.log(user.id);
-      res.locals.user = user;
-      next();
+    const token = req.cookies.accessToken;
+    const user = jwt.verify(token, SECRET_KEY).id;
+
+    const u = await Signs.findOne({
+      where: {
+        id: user,
+      },
     });
+    res.locals.user = u;
+    console.log("middleware", ":", res.locals.user);
+    next();
+    // Signs.findOne({ id: userId }).then((user) => {
+    //   res.locals.user = user;
+    //   console.log(user);
+    //   next();
+    // });
   } catch (error) {
     console.log(error);
     res.status(400).json({
