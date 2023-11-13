@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Products } = require("../models");
+const { Products, Signs } = require("../models");
 
 const authMiddleWare = require("../middlewares/login");
 
@@ -15,14 +15,14 @@ router.post("/product", authMiddleWare, async (req, res) => {
     });
 
     if (exProduct) {
-      return res.status(400).send("중복 상품입니다.");
+      return res.status(400).json({ message: "중복 상품입니다." });
     }
 
     if (Object.keys(req.body).length !== 3) {
       return res.json({ errorMessage: "정확히 입력하세요." });
     }
 
-    await Products.create({
+    const product = await Products.create({
       // 외래키에 userId를 넣어준다.
       userId,
       title,
@@ -30,19 +30,67 @@ router.post("/product", authMiddleWare, async (req, res) => {
       status,
     });
 
-    res.status(201).send("상품 등록 완료");
+    res.status(201).json({ message: "상품 등록 완료", 상품: product });
   } catch (error) {
     console.log(error);
   }
 });
 
-// router.get("/products", async (req, res) => {
+router.get("/products", async (req, res) => {
+  const products = await Products.findAll();
+  const createdAt = req.query.createdAt.toUpperCase();
+  console.log(createdAt);
 
-// });
+  if (!products.length) {
+    return res.status(400).json({ message: "상품이 존재하지 않습니다." });
+  }
 
-// router.get("/product/:productId", async (req, res) => {
+  const product = await Products.findAll({
+    attributes: ["id", "title", "content", "status", "createdAt"],
+    order: [["createdAt", createdAt === "ASC" ? "ASC" : "DESC"]],
+    include: [
+      {
+        model: Signs,
+        attributes: ["nickname"],
+      },
+    ],
+  });
 
-// });
+  return res.status(200).json({
+    상품: product,
+  });
+});
+
+router.get("/product/:productId", async (req, res) => {
+  const { productId } = req.params;
+
+  const products = await Products.findAll({});
+  const p = await products.filter((product) => {
+    console.log(typeof product.id, typeof productId);
+    return product.id === Number(productId);
+  });
+
+  if (!p.length) {
+    return res.status(400).json({ message: "상품이 존재하지 않습니다." });
+  }
+
+  const product = await Products.findOne({
+    where: {
+      id: productId,
+    },
+    attributes: ["id", "title", "content", "status", "createdAt"],
+    include: [
+      {
+        model: Signs,
+        attributes: ["nickname"],
+      },
+    ],
+  });
+
+  res.status(200).json({
+    상품: product,
+  });
+});
 
 router.patch("/product/:productId", authMiddleWare, async (req, res) => {
   const { productId } = req.params;

@@ -21,7 +21,7 @@ router.post("/login", async (req, res) => {
       return user.email === email;
     });
     if (!a.length) {
-      return res.status(400).send("회원이 아닙니다.");
+      return res.status(400).json({ message: "회원이 아닙니다." });
     }
 
     // const id = user.dataValues.userId;
@@ -42,7 +42,9 @@ router.post("/login", async (req, res) => {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).send("비밀번호를 잘못 입력하셨습니다.");
+      return res
+        .status(400)
+        .json({ message: "비밀번호를 잘못 입력하셨습니다." });
     }
 
     if (isPasswordValid) {
