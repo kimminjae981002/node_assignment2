@@ -6,12 +6,10 @@ const db_database = process.env.db_database;
 
 const development = {
   username: db_user,
-  //env.MYSQL_USERNAME은 불러오고자 하는 데이터의 키값이므로 자유롭게 이름설정이 가능하다.
   password: db_password,
   database: db_database,
   host: db_host,
   dialect: "mysql",
-  //port: env.MYSQL_PORT
 };
 
 const production = {

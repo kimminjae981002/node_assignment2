@@ -107,6 +107,12 @@ router.patch("/product/:productId", authMiddleWare, async (req, res) => {
         message: "상품을 찾을 수 없습니다.",
       });
     }
+    if (Object.keys(req.body).length > 3) {
+      return res.status(500).json({
+        message: "데이터 형식에 올바르지 않습니다.",
+      });
+    }
+
     if (res.locals.user.id === product[0].dataValues.id) {
       await Products.update(
         { title, content, status },
