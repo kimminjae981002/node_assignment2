@@ -38,8 +38,12 @@ router.post("/product", authMiddleWare, async (req, res) => {
 
 router.get("/products", async (req, res) => {
   const products = await Products.findAll();
-  const createdAt = req.query.createdAt.toUpperCase();
-  console.log(createdAt);
+  const createdAt = req.query.createdAt
+    ? req.query.createdAt.toUpperCase()
+    : "DESC";
+  // req.query.createdAt 이 있으면 대문자 메서드를 실행하고,
+  // 값이 없다면 기본적으로 내림차순을 실행한다.
+  // 그리고 후에 order에 있는 연산자를 받는다.
 
   if (!products.length) {
     return res.status(400).json({ message: "상품이 존재하지 않습니다." });
